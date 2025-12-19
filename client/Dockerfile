@@ -1,15 +1,14 @@
-# --- ÉTAPE 1: Build Stage (Compilation) ---
-FROM gcc:11 AS build
+FROM gcc:11
+
 WORKDIR /app
+
+# Copier le code source
 COPY . .
-# Supposons que votre programme est compilé avec gcc -o client
+
+# Compiler le client
 RUN gcc -o client client.c
 
-# --- ÉTAPE 2: Final Stage (Image Légère) ---
-FROM alpine:latest
-WORKDIR /usr/local/bin
-# Copie uniquement le binaire compilé
-COPY --from=build /app/client .
-# Spécifiez la commande d'exécution.
-# L'hôte sera 'serveur-service', nom DNS K8s.
+# ⚠️ Très important : dans Kubernetes, le client ne se connecte PAS à 127.0.0.1
+# mais au service "serveur-service" défini dans k8s-serveur-deployment.yaml
 CMD ["./client", "serveur-service", "6000"]
+

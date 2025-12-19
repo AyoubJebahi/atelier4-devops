@@ -1,14 +1,16 @@
-# --- ÉTAPE 1: Build Stage (Compilation) ---
-FROM gcc:11 AS build
+FROM gcc:11
+
 WORKDIR /app
+
+# Copier le code source
 COPY . .
-# Supposons que votre programme est compilé avec gcc -o serveur
+
+# Compiler le serveur
 RUN gcc -o serveur serveur.c
 
-# --- ÉTAPE 2: Final Stage (Image Légère) ---
-FROM alpine:latest
-WORKDIR /usr/local/bin
-# Copie uniquement le binaire compilé
-COPY --from=build /app/serveur .
-# Spécifiez la commande d'exécution
-CMD ["./serveur", "6000"]
+# Port écouté par le serveur
+EXPOSE 6000
+
+# Commande de démarrage
+CMD ["./serveur"]
+
