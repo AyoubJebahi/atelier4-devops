@@ -65,7 +65,7 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 // Met à jour les fichiers de manifeste avec le bon tag d'image
-                sh "sed -i 's|image: .*monapp-serveur:.*|image: ${IMAGE_SERVER}:${env.BUILD_NUMBER}|g' ci-cd-config/k8s-serveur-deployment.yaml"
+                sh "sed -i 's|image: .*|image: ayoubjebahi/monapp-serveur:build-${env.BUILD_NUMBER}|g' ci-cd-config/k8s-serveur-deployment.yaml"
                 sh "sed -i 's|image: .*monapp-client:.*|image: ${IMAGE_CLIENT}:${env.BUILD_NUMBER}|g' ci-cd-config/k8s-client-deployment.yaml"
                 
                 // Applique les manifestes au cluster Minikube
