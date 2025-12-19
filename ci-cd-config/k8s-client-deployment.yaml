@@ -17,5 +17,5 @@ spec:
       containers:
       - name: client
         # L'image sera mise à jour par Jenkins.
-        image: monuser/monapp-client:latest 
+        image: ayoubjebahi/monapp-client:latest 
         # Le client n'a besoin que d'accéder au serveur via le Service.
