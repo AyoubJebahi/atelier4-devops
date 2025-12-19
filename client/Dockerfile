@@ -1,10 +1,15 @@
-FROM gcc:latest
-
+# --- ÉTAPE 1: Build Stage (Compilation) ---
+FROM gcc:11 AS build
 WORKDIR /app
-
-COPY client.c .
-
+COPY . .
+# Supposons que votre programme est compilé avec gcc -o client
 RUN gcc -o client client.c
 
-# On met pour l'instant 127.0.0.1:6000 (on changera pour Kubernetes plus tard)
-CMD ["./client", "127.0.0.1", "6000"]
+# --- ÉTAPE 2: Final Stage (Image Légère) ---
+FROM alpine:latest
+WORKDIR /usr/local/bin
+# Copie uniquement le binaire compilé
+COPY --from=build /app/client .
+# Spécifiez la commande d'exécution.
+# L'hôte sera 'serveur-service', nom DNS K8s.
+CMD ["./client", "serveur-service", "6000"]

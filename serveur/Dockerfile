@@ -1,9 +1,14 @@
-FROM gcc:latest
-
+# --- ÉTAPE 1: Build Stage (Compilation) ---
+FROM gcc:11 AS build
 WORKDIR /app
-
-COPY serveur.c .
-
+COPY . .
+# Supposons que votre programme est compilé avec gcc -o serveur
 RUN gcc -o serveur serveur.c
 
-CMD ["./serveur"]
+# --- ÉTAPE 2: Final Stage (Image Légère) ---
+FROM alpine:latest
+WORKDIR /usr/local/bin
+# Copie uniquement le binaire compilé
+COPY --from=build /app/serveur .
+# Spécifiez la commande d'exécution
+CMD ["./serveur", "6000"]
