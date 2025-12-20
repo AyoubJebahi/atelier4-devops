@@ -16,21 +16,20 @@ spec:
     spec:
       containers:
       - name: serveur
-        # L'image sera mise à jour par Jenkins. Utilisez un placeholder pour l'instant.
         image: ayoubjebahi/monapp-serveur:latest 
         ports:
         - containerPort: 6000
 ---
-# Définition du Service pour le Serveur (Accès interne au cluster)
 apiVersion: v1
 kind: Service
 metadata:
-  name: serveur-service # C'est le nom DNS utilisé par le CLIENT pour se connecter
+  name: serveur-service
 spec:
   selector:
     app: serveur
   ports:
     - protocol: TCP
-      port: 6000
-      targetPort: 6000
+      port: 5000        # ce que voit le client
+      targetPort: 6000  # là où écoute ton serveur
   type: ClusterIP
+
